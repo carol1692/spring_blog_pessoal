@@ -49,7 +49,7 @@ public class PostagemController {
 	
 	@GetMapping("/titulo/{titulo}")
 	public ResponseEntity<List<Postagem>> getAllByTitulo(@PathVariable String titulo){
-		return ResponseEntity.ok(postagemRepository.findAllBytituloContainingIgnoreCase(titulo));
+		return ResponseEntity.ok(postagemRepository.findAllByTituloContainingIgnoreCase(titulo));
 			
 	}
 	
