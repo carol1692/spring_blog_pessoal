@@ -16,14 +16,20 @@ import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
  
 @Component
-
 public class JwtService {
  
-	private static final Dotenv dotenv = Dotenv.load();
-	
-    private static final String SECRET = dotenv.get("JWT_SECRET");
+	private static final String SECRET;
+	static {
+        // tenta carregar variáveis locais (para desenvolvimento)
+        Dotenv dotenv = Dotenv.configure()
+                .ignoreIfMissing() // evita erro se o arquivo .env não existir
+                .load();
 
-    private static final Duration EXPIRATION_DURATION = Duration.ofMinutes(1200);
+        // busca JWT_SECRET do .env OU das variáveis de ambiente do sistema
+        SECRET = dotenv.get("JWT_SECRET", System.getenv("JWT_SECRET"));
+    }
+    
+    private static final Duration EXPIRATION_DURATION = Duration.ofMinutes(15);
 
     private final SecretKey signingKey;
 
