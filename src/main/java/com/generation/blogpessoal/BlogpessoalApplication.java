@@ -9,9 +9,23 @@ import io.github.cdimascio.dotenv.Dotenv;
 public class BlogpessoalApplication {
 
 	public static void main(String[] args) {
-		Dotenv dotenv = Dotenv.load();
+		 try {
+	            // Tenta carregar o .env (para uso local)
+	            Dotenv dotenv = Dotenv.configure()
+	                                  .ignoreIfMissing()  // Evita erro se o arquivo não existir
+	                                  .load();
 
-		dotenv.entries().forEach(entry -> System.setProperty(entry.getKey(), entry.getValue()));
+	            // Carrega variáveis locais no System se existirem
+	            dotenv.entries().forEach(entry -> {
+	                if (System.getenv(entry.getKey()) == null) {
+	                    System.setProperty(entry.getKey(), entry.getValue());
+	                }
+	            });
+
+	            System.out.println("✅ Variáveis de ambiente carregadas com sucesso!");
+	        } catch (Exception e) {
+	            System.out.println("⚠️ Nenhum arquivo .env encontrado (modo produção)");
+	        }
 		
 		SpringApplication.run(BlogpessoalApplication.class, args);
 	}
